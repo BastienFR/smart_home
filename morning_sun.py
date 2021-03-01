@@ -7,7 +7,7 @@
 ## The function turn on slowly a smart light through MQTT and keep the light on for
 ## a certain ammount of time.  The goal of the function is to help me wake up in the morning
 
-## It is run with a crontab job on my rpi
+## It is run with a crontab job on my rpi (don't forget to set the time zone setting of the pi)
 ## cron line of code:
 ###  crontab -e
 ###    40 5 * * * python /home/smart_home/morning_sun.py
@@ -24,7 +24,8 @@ sun_rise_duration = int(20) # time wanted to go from 0 to 100% intensity in minu
 day_length = 3600 # in seconds
 day_off = ["2021-04-02","2021-04-05","2021-05-24","2021-06-24",
            "2021-07-01","2021-09-06","2021-10-11", "2021-12-24",
-           "2021-12-27", "2021-12-28", "2021-12-31"]  # the week days you don't want to sun to rise
+           "2021-12-27", "2021-12-28", "2021-12-31",
+	   "2021-03-02", "2021-03-05"]  # the week days you don't want to sun to rise
 
 ### Calculation needed
 
