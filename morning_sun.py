@@ -20,7 +20,7 @@ import datetime
 
 ###  Parameters to adjust
 broker="192.168.1.66"  # MQTT broker address
-sun_rise_duration = int(20) # time wanted to go from 0 to 100% intensity in minutes
+sun_rise_duration = int(30) # time wanted to go from 0 to 100% intensity in minutes
 day_length = 3600 # in seconds
 day_off = ["2021-04-02","2021-04-05","2021-05-24","2021-06-24",
            "2021-07-01","2021-09-06","2021-10-11", "2021-12-24",
