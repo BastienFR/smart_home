@@ -50,7 +50,8 @@ client.loop_start() #start loop to process received messages
 client.publish("home/boudoir/blind/0/set",0)
 
 ### Turn on the ceiling light (dimmed) (only at night)
-if(not (s["dawn"].replace(tzinfo=None) < now < s["dusk"].replace(tzinfo=None))) 
+daylight = (s["dawn"].replace(tzinfo=None) < now < s["dusk"].replace(tzinfo=None))
+if not daylight
     client.publish("home/boudoir/dimmer_MJ_1/cmnd/Dimmer",70)
 
 ### Turn off the side lamp 
