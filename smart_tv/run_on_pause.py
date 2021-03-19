@@ -47,7 +47,7 @@ client.loop_start() #start loop to process received messages
 
 ### Turn on the ceiling light (dimmed) (only at night)
 daylight = (s["dawn"].replace(tzinfo=None) < now < s["dusk"].replace(tzinfo=None))
-if not daylight
+if not daylight:
     client.publish("home/boudoir/dimmer_MJ_1/cmnd/Dimmer",60)
 
 time.sleep(4)

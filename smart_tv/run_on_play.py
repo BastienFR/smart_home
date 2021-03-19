@@ -54,7 +54,7 @@ client.publish("home/boudoir/dimmer_MJ_1/cmnd/Dimmer",0)
 
 ### Dim the side lamp (only at night)
 daylight = (s["dawn"].replace(tzinfo=None) < now < s["dusk"].replace(tzinfo=None))
-if not daylight
+if not daylight:
     client.publish("home/boudoir/globe_bulb_1/cmnd/Dimmer",33)
 
 time.sleep(4)
