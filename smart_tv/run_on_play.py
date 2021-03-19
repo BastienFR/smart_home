@@ -30,7 +30,7 @@ now = datetime.datetime.now()
 ## Set and connect to the MQTT broker 
 broker="192.168.1.66"
 
-define callback
+### define callback
 def on_message(client, userdata, message):
     time.sleep(1)
     print("received message =",str(message.payload.decode("utf-8")))
