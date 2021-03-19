@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<strings>
+    <string id="30011">General</string>
+    <string id="30012">MQTT Broker</string>
+    <string id="30000">IP Address</string>
+    <string id="30013">Location ID</string>
+    <string id="30014">Topic addressing</string>
+</strings>
+
