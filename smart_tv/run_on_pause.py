@@ -21,7 +21,7 @@ import resources.paho.mqtt.client as paho
 from sys import version_info
 if version_info[0] < 3:
     import os
-    dirname = os.path.join(__file__)
+    dirname = os.path.dirname(os.path.abspath(__file__))
     file_fc_sun = os.path.join(dirname, 'resources/evaluate_sunset_sunrise.py')
     execfile(file_fc_sun)  # python 2?
 else:
