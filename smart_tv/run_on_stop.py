@@ -16,15 +16,23 @@
 ## load packages, they have to be export in a folder with this script as they are not available for kodi otherwise
 import time
 import datetime
+import math
+import pytz
 import resources.paho.mqtt.client as paho
-from resources.astral import LocationInfo
-from resources.astral.sun import sun
+from sys import version_info
+if version_info[0] < 3:
+    execfile("resources/evaluate_sunset_sunrise.py")  # python 2?
+else:
+    exec(open("resources/evaluate_sunset_sunrise.py").read())  # Python 3?
 
 ## prepare time information:
-#### Find dusk and dawn
-loc = LocationInfo(name='QC', timezone='America/Toronto',
-                   latitude= 46.829853, longitude=-71.254028)
-s = sun(loc.observer, date=datetime.datetime.date(datetime.datetime.now()), tzinfo=loc.timezone)
+#### Find sunset and sunrise
+latitude_deg = 46.829853
+longitude_deg = -71.254028
+timezone = datetime.datetime.now(pytz.timezone('America/Toronto')).strftime('%z')
+timezone = int(timezone) / 100
+sunrise, sunset = calculate_rise_set(latitude_deg, longitude_deg, timezone)
+offset = 45  # number of minutes after sunrise or before sunset to consider it's light out
 now = datetime.datetime.now()
 
 ## Set and connect to the MQTT broker 
@@ -50,7 +58,11 @@ client.loop_start() #start loop to process received messages
 client.publish("home/boudoir/blind/0/set",0)
 
 ### Turn on the ceiling light (dimmed) (only at night)
-daylight = (s["dawn"].replace(tzinfo=None) < now < s["dusk"].replace(tzinfo=None))
+dawn = sunrise + datetime.timedelta(minutes = offset)
+dust = sunset - datetime.timedelta(minutes = offset)
+
+daylight = (dawn.replace(tzinfo=None) < now < dust.replace(tzinfo=None))
+
 if not daylight:
     client.publish("home/boudoir/dimmer_MJ_1/cmnd/Dimmer",70)
 
