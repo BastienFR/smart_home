@@ -20,7 +20,10 @@ import pytz
 import resources.paho.mqtt.client as paho
 from sys import version_info
 if version_info[0] < 3:
-    execfile("resources/evaluate_sunset_sunrise.py")  # python 2?
+    import os
+    dirname = os.path.join(__file__)
+    file_fc_sun = os.path.join(dirname, 'resources/evaluate_sunset_sunrise.py')
+    execfile(file_fc_sun)  # python 2?
 else:
     exec(open("resources/evaluate_sunset_sunrise.py").read())  # Python 3?
 
