@@ -101,13 +101,13 @@ def calculate_rise_set(latitude_deg, longitude_deg, timezone):
     Jrise = Jtransit - omega_degrees/360
     numdays = Jrise - jd2000
     numdays =  numdays + 0.5 #offset because Julian dates start at noon
-    numdays =  numdays + timezone/24 #offset for time zone
+    numdays =  numdays + float(timezone)/float(24) #offset for time zone, the float is necessary for python 2
     sunrise = datetime.datetime(2000, 1, 1) + datetime.timedelta(numdays)
 
     Jset = Jtransit + omega_degrees/360
     numdays = Jset - jd2000
     numdays =  numdays + 0.5 #offset because Julian dates start at noon
-    numdays =  numdays + timezone/24 #offset for time zone
+    numdays =  numdays + float(timezone)/float(24) #offset for time zone
     sunset = datetime.datetime(2000, 1, 1) + datetime.timedelta(numdays)
 
     return sunrise, sunset
