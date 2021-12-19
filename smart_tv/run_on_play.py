@@ -61,7 +61,19 @@ client.loop_start() #start loop to process received messages
 client.publish("home/boudoir/blind/0/set",100)
 
 ### Turn off the ceiling light
-client.publish("home/boudoir/dimmer_MJ_1/cmnd/Dimmer",0)
+### but only if not between 16 and 18, has it's when my kids watch tv and I want them to have light
+
+#### preparing function
+def in_between(now, start, end):
+    if start <= end:
+        return start <= now < end
+    else: # over midnight e.g., 23:30-04:15
+        return start <= now or now < end
+      
+if in_between(now.time(), datetime.time(16), datetime.time(18)):
+    client.publish("home/boudoir/dimmer_MJ_1/cmnd/Dimmer",50)
+else:
+    client.publish("home/boudoir/dimmer_MJ_1/cmnd/Dimmer",0)
 
 ### Dim the side lamp (only at night)
 dawn = sunrise + datetime.timedelta(minutes = offset)
