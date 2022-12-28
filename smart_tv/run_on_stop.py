@@ -67,7 +67,7 @@ dust = sunset - datetime.timedelta(minutes = offset)
 daylight = (dawn.replace(tzinfo=None) < now < dust.replace(tzinfo=None))
 
 if not daylight:
-    client.publish("home/boudoir/dimmer_MJ_1/cmnd/Dimmer",70)
+    client.publish("home/boudoir/dimmer_MJ_1/cmnd/Dimmer",60)
 
 ### Turn off the side lamp 
 client.publish("home/boudoir/globe_bulb_1/cmnd/Dimmer",0)
