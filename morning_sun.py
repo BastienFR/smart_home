@@ -10,7 +10,7 @@
 ## It is run with a crontab job on my rpi (don't forget to set the time zone setting of the pi)
 ## cron line of code:
 ###  crontab -e
-###    40 5 * * * python /home/smart_home/morning_sun.py
+###    40 5 * * * TZ=America/Toronto python3 /home/smart_home/morning_sun.py
 
  
 ###  Modules needed
