@@ -17,27 +17,41 @@
 import time
 import paho.mqtt.client as paho
 import datetime
+import holidays
+
+## what is the day today
+today = datetime.datetime.date(datetime.datetime.now())
+print(today)
 
 ###  Parameters to adjust
 broker="192.168.1.66"  # MQTT broker address
 sun_rise_duration = int(30) # time wanted to go from 0 to 100% intensity in minutes
 day_length = 3600 # in seconds
-day_off = ["2023-12-22","2023-12-23","2023-12-24","2023-12-25","2023-12-26","2023-12-27", "2022-12-28",
-           "2022-12-29","2022-12-30","2022-12-31","2023-01-01","2023-01-02","2023-01-03","2023-01-04","2023-01-05",
-           "2023-01-06","2023-01-07","2023-01-08",
-           "2023-04-07","2023-04-10",
-           "2023-05-22",
-           "2023-06-24","2023-07-01",
-           "2023-08-02","2023-08-03","2023-08-04","2023-08-05","2023-08-06",
-	         "2023-08-09","2023-08-10","2023-08-11","2023-08-12","2023-08-13",
-	         "2023-08-16","2023-08-17","2023-08-18","2023-08-19","2023-08-20",
-           "2023-09-04","2023-10-09"]  # the week days you don't want to sun to rise
+
+### Managing the day I don't want the light to turn on.
+
+#### find the holidays for a bunch of coming years
+holiday = []
+for ptr in holidays.CA(years = [2023, 2024, 2025, 2026], prov="QC").items(): 
+    holiday.append(ptr)
+
+##### Adding good friday which I have but is not offical
+h = holidays.CA(years=2022, prov="QC")
+good_monday = h.get_named('Good Friday')[0] + datetime.timedelta(days=4)
+
+#### Set my upcoming vacations
+num_of_dates = 22
+vacations_start = datetime.date(2024, 7, 26)
+vacations_days = [vacations_start +  datetime.timedelta(days=x) for x in range(num_of_dates)]
+
+#### join both
+day_off = vacations_days
+day_off.append(holiday)
+day_off.append(good_monday)
+print(today in day_off)
 
 ### Calculation needed
 
-## what is the day today
-today = datetime.datetime.date(datetime.datetime.now()).strftime("%Y-%m-%d")
-print(today)
 
 ## what day of the week is it?
 day_of_week = datetime.datetime.today().weekday()
@@ -69,11 +83,13 @@ if today not in day_off:
 
         for x in range(101):
             client.publish("home/master/globe_bulb_2/cmnd/Dimmer",x)
+            client.publish("home/master/globe_bulb_3/cmnd/Dimmer",x)
             print(x)
             time.sleep(wait_time)
 
         time.sleep(day_length)  ## time to keep the sun up
         client.publish("home/master/globe_bulb_2/cmnd/POWER","off")
+        client.publish("home/master/globe_bulb_3/cmnd/POWER","off")
 
         ## disconnect the service
         client.disconnect() #disconnect
