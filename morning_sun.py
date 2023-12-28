@@ -1,18 +1,3 @@
-##########
-####
-##    Morning Sun
-####
-##########
-
-## The function turn on slowly a smart light through MQTT and keep the light on for
-## a certain ammount of time.  The goal of the function is to help me wake up in the morning
-
-## It is run with a crontab job on my rpi (don't forget to set the time zone setting of the pi)
-## cron line of code:
-###  crontab -e
-###    40 5 * * * TZ=America/Toronto python3 /home/smart_home/morning_sun.py
-
- 
 ###  Modules needed
 import time
 import paho.mqtt.client as paho
@@ -22,6 +7,8 @@ import holidays
 ## what is the day today
 today = datetime.datetime.date(datetime.datetime.now())
 print(today)
+currentYear = datetime.datetime.now().year
+print(currentYear)
 
 ###  Parameters to adjust
 broker="192.168.1.66"  # MQTT broker address
@@ -30,13 +17,10 @@ day_length = 3600 # in seconds
 
 ### Managing the day I don't want the light to turn on.
 
-#### find the holidays for a bunch of coming years
-holiday = []
-for ptr in holidays.CA(years = [2023, 2024, 2025, 2026], prov="QC").items(): 
-    holiday.append(ptr)
+#### find the holidays for this year
+h = holidays.CA(years=currentYear, prov="QC")
 
-##### Adding good friday which I have but is not offical
-h = holidays.CA(years=2022, prov="QC")
+##### Adding good monday which I have but is not offical
 good_monday = h.get_named('Good Friday')[0] + datetime.timedelta(days=4)
 
 #### Set my upcoming vacations
@@ -44,10 +28,16 @@ num_of_dates = 22
 vacations_start = datetime.date(2024, 7, 26)
 vacations_days = [vacations_start +  datetime.timedelta(days=x) for x in range(num_of_dates)]
 
+#### Christmas vacations
+num_of_dates = 22
+christmas_start = h.get_named('Christmas Day') 
+christmas_days = [christmas_start[0] +  datetime.timedelta(days=x) for x in [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8]]
+
+
 #### join both
-day_off = vacations_days
-day_off.append(holiday)
+day_off = vacations_days + h.get_named('day') + christmas_days
 day_off.append(good_monday)
+
 print(today in day_off)
 
 ### Calculation needed
