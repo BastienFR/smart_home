@@ -17,7 +17,7 @@
 import time
 import datetime
 import math
-import pytz
+import resources.pytz as pytz
 import resources.paho.mqtt.client as paho
 from sys import version_info
 if version_info[0] < 3:
